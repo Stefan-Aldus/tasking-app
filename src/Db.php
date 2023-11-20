@@ -9,6 +9,6 @@ class Db
     public function __construct()
     {
         self::$db = new Mysql();
-        self::$db->connect("localhost", "root", "root", "dbproject");
+        self::$db->connect("localhost", "root", "root", "calendarapp");
     }
 }

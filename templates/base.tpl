@@ -32,7 +32,19 @@
                 </div>
             </nav>
         </header>
-        <main class="container-fluid">
+        <main class="container-fluid w-100">
+            {if isset($info)}
+                <div class="alert alert-info alert-dismissible fade show w-100" role="alert">
+                    {$info}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {/if}
+            {if isset($error)}
+                <div class="alert alert-danger alert-dismissible fade show w-100" role="alert">
+                    {$error}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {/if}
             {block name="content"}{/block}
         </main>
         <footer class="container border-top border-2 border-dark-subtle bg-light-subtle mt-auto py-3 min-vw-100">
