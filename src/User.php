@@ -14,6 +14,30 @@ class User
         $this->username = $username;
         $this->firstName = $firstname;
         $this->lastName = $lastname;
+        $this->getTasksFromDb();
+    }
+
+    private function getTasksFromDb(): void
+    {
+        $columns = [
+            "task" => [
+                "*"
+            ]
+        ];
+        $params = [
+            "task.user_id" => "user.id",
+        ];
+
+        $result = Db::$db->select($columns, $params);
+        foreach ($result as $task) {
+            if (isset($task["date"])) {
+                $task["date"] = date("Y-m-d", strtotime($task["date"]));
+            }
+            if (!isset($task["description"])) {
+                $task["description"] = "No Description Set...";
+            }
+            $this->tasks[] = new Task($task["id"], $task["name"], $task["description"], $task["date"], $task["isdone"]);
+        }
     }
 
     public static function login(string $username, string $password): null|User
@@ -105,28 +129,5 @@ class User
     public function getUsername(): string
     {
         return $this->username;
-    }
-
-    public function getTasksFromDb()
-    {
-        $columns = [
-            "task" => [
-                "*"
-            ]
-        ];
-        $params = [
-            "task.user_id" => "user.id",
-        ];
-
-        $result = Db::$db->select($columns, $params);
-        foreach ($result as $task) {
-            if (isset($task["date"])) {
-                $task["date"] = date("Y-m-d", strtotime($task["date"]));
-            }
-            if (!isset($task["description"])) {
-                $task["description"] = "";
-            }
-            $this->tasks[] = new Task($task["id"], $task["name"], $task["description"], $task["date"], $task["isdone"]);
-        }
     }
 }

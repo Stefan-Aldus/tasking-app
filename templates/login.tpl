@@ -4,13 +4,6 @@
     <h1>Login</h1>
     <form class="w-50" method="post">
         <div class="form-group">
-            <label for="firstname">First Name</label>
-            <input type="text" id="firstname" name="firstname" class="form-control"/>
-            <label for="lastname">Last Name</label>
-            <input type="text" id="lastname" name="lastname" class="form-control"/>
-            <p class="form-text text-muted">We will never share your personal details with anyone.</p>
-        </div>
-        <div class="form-group">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" class="form-control"/>
         </div>
