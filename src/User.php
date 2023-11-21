@@ -31,6 +31,7 @@ class User
         ];
         $params = [
             "user.id" => "task.user_id",
+            "task.user_id" => $this->userId,
         ];
 
         $result = Db::$db->select($columns, $params);
