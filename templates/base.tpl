@@ -65,12 +65,22 @@
                 </div>
                 <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
                     <li class="ms-3">
-                        <a class="text-muted" href="#">
+                        <a class="text-muted" href="https://www.linkedin.com/in/stefan-aldus-506b8a258/">
+                            <i class="fa-brands fa-linkedin fa-2x"></i>
+                        </a>
+                    </li>
+                    <li class="ms-3">
+                        <a class="text-muted" href="https://github.com/Stefan-Aldus">
                             <i class="fa-brands fa-github fa-2x"></i>
                         </a>
                     </li>
                     <li class="ms-3">
-                        <a class="text-muted" href="#">
+                        <a class="text-muted" href="https://github.com/Stefan-Aldus/tasking-app">
+                            <i class="fa-brands fa-square-github fa-2x"></i>
+                        </a>
+                    </li>
+                    <li class="ms-3">
+                        <a class="text-muted" href="https://twitter.com/Stefan0_">
                             <i class="fa-brands fa-x-twitter fa-2x"></i>
                         </a>
                     </li>

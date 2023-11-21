@@ -84,7 +84,6 @@ switch ($action) {
         }
         break;
 
-    case "home":
     case "tasks":
         if (isset($_SESSION["user"])) {
             $smarty->assign("tasks", $_SESSION["user"]->getTasks());
@@ -208,6 +207,10 @@ switch ($action) {
             }
         }
         break;
+    case "home":
+        $smarty->display("home.tpl");
+        break;
+
     default:
-        $smarty->display("base.tpl");
+        $smarty->display("404.tpl");
 }
