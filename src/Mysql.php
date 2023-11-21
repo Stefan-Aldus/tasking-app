@@ -36,9 +36,23 @@ class Mysql implements Database
 //        INSERT INTO user (name, password) VALUES (':username', ':password')";
     }
 
-    public function update()
+    public function update(string $table, array $params)
     {
-        // TODO: Implement update() method.
+// UPDATE task SET completed = 1 WHERE task.id = :id
+        try {
+            $query = "UPDATE $table SET ";
+            $columns = [];
+            foreach ($params as $key => $value) {
+                $columns[] = "$key = '$value'";
+            }
+            $query .= implode(", ", $columns);
+            $query .= " WHERE id = :id";
+            $update = $this->connection->prepare($query);
+            $update->bindValue(":id", $params["id"]);
+            $update->execute();
+        } catch (PDOException $error) {
+            echo "Error: " . $error->getMessage() . "<br/>";
+        }
     }
 
     public function delete()

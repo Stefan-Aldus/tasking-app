@@ -4,20 +4,20 @@
     <h1>Register</h1>
     <form class="w-50" method="post">
         <div class="form-group">
-            <label for="firstname">First Name</label>
+            <label class="required-input" for="firstname">First Name</label>
             <input type="text" id="firstname" name="firstname" class="form-control"/>
-            <label for="lastname">Last Name</label>
+            <label class="required-input" for="lastname">Last Name</label>
             <input type="text" id="lastname" name="lastname" class="form-control"/>
             <p class="form-text text-muted">We will never share your personal details with anyone.</p>
         </div>
         <div class="form-group">
-            <label for="username">Username</label>
+            <label class="required-input" for="username">Username</label>
             <input type="text" id="username" name="username" class="form-control"/>
         </div>
         <div class="form-group">
-            <label for="password1">Password</label>
+            <label class="required-input" for="password1">Password</label>
             <input type="text" id="password1" name="password1" class="form-control"/>
-            <label for="password2">Repeat Password</label>
+            <label class="required-input" for="password2">Repeat Password</label>
             <input type="text" id="password2" name="password2" class="form-control"/>
             <p class="form-text text-muted">Passwords must match and be at least 6 characters long.</p>
         </div>

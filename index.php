@@ -4,6 +4,7 @@ require_once "vendor/autoload.php";
 
 use TaskingApp\Db;
 use TaskingApp\InputSanitizer;
+use TaskingApp\Task;
 use TaskingApp\User;
 
 $db = new Db();
@@ -44,8 +45,8 @@ switch ($action) {
 
     case "logout":
         unset($_SESSION["user"]);
-        $smarty->assign("info", "You have been logged out");
-        $smarty->display("login.tpl");
+        header("Location: index.php?action=login");
+        break;
 
     case "register":
         // If the user is not logged in, display the register form
@@ -83,6 +84,7 @@ switch ($action) {
         }
         break;
 
+    case "home":
     case "tasks":
         if (isset($_SESSION["user"])) {
             $smarty->assign("tasks", $_SESSION["user"]->getTasks());
@@ -91,8 +93,121 @@ switch ($action) {
             $smarty->assign("error", "You need to be logged in to view this page");
             $smarty->display("login.tpl");
         }
+
         break;
 
+    case "addtask":
+        if (isset($_SESSION["user"])) {
+            if (!isset($_POST["submit"])) {
+                $smarty->display("addtask.tpl");
+            } else {
+                if (!empty($_POST["date"]) && !empty($_POST["name"])) {
+                    if (!empty($_POST["description"])) {
+                        Task::createTask($_POST["name"], $_POST["description"], $_POST["date"]);
+                    } else {
+                        Task::createTask($_POST["name"], "", $_POST["date"]);
+                    }
+                    $smarty->assign("info", "Task added successfully!");
+                    $smarty->display("tasks.tpl");
+                } else {
+                    $smarty->assign("error", "Please fill in all fields.");
+                    $smarty->display("addtask.tpl");
+                }
+            }
+        } else {
+            $smarty->assign("error", "You need to be logged in to view this page");
+            $smarty->display("login.tpl");
+        }
+        break;
+
+    case "description":
+        if (isset($_POST["finish"])) {
+            $task = Task::getTaskById($_POST["id"]);
+            $task->updateTaskStatus();
+            header("Location: index.php?action=tasks");
+        } elseif (isset($_POST["description"])) {
+            $task = Task::getTaskById($_POST["id"]);
+            $smarty->assign("task", $task);
+            $smarty->display("task.tpl");
+        } elseif (isset($_POST["descriptionfinish"])) {
+            $task = Task::getTaskById($_POST["id"]);
+            $task->updateTaskStatus();
+            $smarty->assign("task", $task);
+            $smarty->display("task.tpl");
+        } else {
+            $smarty->assign("error", "You need to be logged in to view this page");
+            $smarty->display("login.tpl");
+        }
+        break;
+
+    case "account":
+        if (isset($_SESSION["user"])) {
+            $smarty->assign("user", $_SESSION["user"]);
+            $smarty->display("account.tpl");
+        } else {
+            $smarty->assign("error", "You need to be logged in to view this page");
+            $smarty->display("login.tpl");
+        }
+        break;
+
+    case "editaccount":
+        if (isset($_SESSION["user"])) {
+            if (isset($_POST["editusername"])) {
+                $smarty->assign("user", $_SESSION["user"]);
+                $smarty->assign("type", "username");
+                $smarty->display("editaccount.tpl");
+            } elseif (isset($_POST["editpassword"])) {
+                $smarty->assign("user", $_SESSION["user"]);
+                $smarty->assign("type", "password");
+                $smarty->display("editaccount.tpl");
+            } else {
+                $smarty->display("404.tpl");
+            }
+        } else {
+            $smarty->assign("error", "You need to be logged in to view this page");
+            $smarty->display("login.tpl");
+        }
+        break;
+
+    case "updateaccount":
+        if (isset($_SESSION["user"])) {
+            if (isset($_POST["updateUsername"])) {
+                if (!empty($_POST["username"])) {
+                    if (User::checkUserAvailable($_POST["username"])) {
+                        $_SESSION["user"]->updateUsername($_POST["username"]);
+                        $smarty->assign("info", "Username updated successfully!");
+                        header("Location: index.php?action=account");
+                    } else {
+                        $smarty->assign("error", "Username already taken, please choose another one.");
+                        $smarty->display("editaccount.tpl");
+                    }
+                } else {
+                    $smarty->assign("error", "Please fill in all fields.");
+                    $smarty->display("editaccount.tpl");
+                }
+            } elseif (isset($_POST["updatePassword"])) {
+                if (!empty($_POST["password1"]) && !empty($_POST["password2"])) {
+                    if ($_POST["password1"] === $_POST["password2"]) {
+                        if (InputSanitizer::checkLength($_POST["password1"], 6)) {
+                            $_SESSION["user"]->updatePassword($_POST["password1"], $_POST["password2"], $_POST["currentpassword"]);
+                            header("Location: index.php?action=account");
+                        } else {
+                            $smarty->assign("error", "Password must be at least 6 characters long.");
+                            $smarty->display("editaccount.tpl");
+                        }
+                    } else {
+                        $smarty->assign("error", "Passwords do not match, please try again.");
+                        $smarty->display("editaccount.tpl");
+                    }
+                } else {
+                    $smarty->assign("error", "Please fill in all fields.");
+                    $smarty->display("editaccount.tpl");
+                }
+            } else {
+                $smarty->display("404.tpl");
+            }
+        }
+        break;
     default:
         $smarty->display("base.tpl");
 }

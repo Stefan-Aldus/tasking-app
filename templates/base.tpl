@@ -6,6 +6,13 @@
         <script src="https://kit.fontawesome.com/92b411cd61.js" crossorigin="anonymous"></script>
         <script type="text/javascript" src="/vendor/twbs/bootstrap/dist/js/bootstrap.min.js" defer></script>
     </head>
+    <style>
+        .required-input::after {
+            content: "*";
+            margin-left: 3px;
+            color: red;
+        }
+    </style>
     <body class="d-flex flex-column min-vh-100">
         <header>
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-light container-fluid">
@@ -13,11 +20,14 @@
                     <div class="row gap-1 align-items-center">
                         <a class="navbar-brand col-sm-auto">PHP Tasks App</a>
                         <a class="nav-link col-sm" href="/index.php?action=home">Home</a>
+
                         {if isset($smarty.session.user)}
                             <a class="nav-link col-sm" href="/index.php?action=tasks">Tasks</a>
+                            <a class="nav-link col-sm" href="/index.php?action=addtask">Add Task</a>
                         {/if}
                     </div>
                 </div>
+
                 <div class="ms-4 d-grid text-light">
                     <div class="row gap-5">
                         {if !isset($smarty.session.user)}

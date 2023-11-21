@@ -3,12 +3,12 @@
 {block name="content"}
     <h1>Login</h1>
     <form class="w-50" method="post">
-        <div class="form-group">
-            <label for="username">Username</label>
+        <div class="form-group.required">
+            <label class="required-input" for="username">Username</label>
             <input type="text" id="username" name="username" class="form-control"/>
         </div>
         <div class="form-group">
-            <label for="password">Password</label>
+            <label class="required-input" for="password">Password</label>
             <input type="text" id="password" name="password" class="form-control"/>
         </div>
         <div class="form-group d-flex mt-3 w-100">

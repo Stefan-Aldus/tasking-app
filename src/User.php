@@ -7,13 +7,15 @@ class User
     private string $username;
     private string $firstName;
     private string $lastName;
+    private int $userId;
     private array $tasks = [];
 
-    public function __construct(string $username, string $firstname, string $lastname)
+    public function __construct(string $username, string $firstname, string $lastname, int $userId)
     {
         $this->username = $username;
         $this->firstName = $firstname;
         $this->lastName = $lastname;
+        $this->userId = $userId;
         $this->getTasksFromDb();
     }
 
@@ -22,13 +24,19 @@ class User
         $columns = [
             "task" => [
                 "*"
+            ],
+            "user" => [
+                "id"
             ]
         ];
         $params = [
-            "task.user_id" => "user.id",
+            "user.id" => "task.user_id",
         ];
 
         $result = Db::$db->select($columns, $params);
+        if (empty($result)) {
+            return;
+        }
         foreach ($result as $task) {
             if (isset($task["date"])) {
                 $task["date"] = date("Y-m-d", strtotime($task["date"]));
@@ -36,7 +44,7 @@ class User
             if (!isset($task["description"])) {
                 $task["description"] = "No Description Set...";
             }
-            $this->tasks[] = new Task($task["id"], $task["name"], $task["description"], $task["date"], $task["isdone"]);
+            $this->tasks[] = new Task($task["id"], $task["name"], $task["description"], $task["date"], $task["completed"]);
         }
     }
 
@@ -56,7 +64,7 @@ class User
             // Check if the password matches the hashed password in the database
             if (password_verify($password, $result[0]["password"])) {
                 //  Return a new User object with the retrieved data
-                return new User($result[0]["username"], $result[0]["firstname"], $result[0]["lastname"]);
+                return new User($result[0]["username"], $result[0]["firstname"], $result[0]["lastname"], $result[0]["id"]);
             } else {
                 return null;
             }
@@ -116,6 +124,13 @@ class User
         return $available;
     }
 
+    public function getTasks(): array
+    {
+        unset($this->tasks);
+        $this->getTasksFromDb();
+        return $this->tasks;
+    }
+
     public function getFirstName(): string
     {
         return $this->firstName;
@@ -129,5 +144,45 @@ class User
     public function getUsername(): string
     {
         return $this->username;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+
+    public function updateUsername($newUsername): void
+    {
+        $table = "user";
+        $params = [
+            "username" => $newUsername
+        ];
+        $where = [
+            "id" => $this->userId
+        ];
+        Db::$db->update($table, $params, $where);
+        $this->username = $newUsername;
+    }
+
+    public function updatePassword($newPassword1, $newPassword2, $currentPassword): bool
+    {
+        $storedPassword = Db::$db->select(["user" => ["password"]], ["id" => $this->userId])[0]["password"];
+
+        if (!password_verify($currentPassword, $storedPassword)) {
+            return false;
+        }
+
+        if ($newPassword1 != $newPassword2) {
+            return false;
+        }
+
+        $table = "user";
+        $params = [
+            "password" => password_hash($newPassword1, PASSWORD_BCRYPT),
+            "id" => $this->userId,
+        ];
+        Db::$db->update($table, $params);
+
+        return true;
     }
 }

@@ -4,7 +4,7 @@ namespace TaskingApp;
 
 class InputSanitizer
 {
-    public static function sanitize(array|string $input): string
+    public static function sanitize(array|string $input): string|array
     {
         // If the input is an array, sanitize each value
         if (is_array($input)) {
@@ -38,6 +38,16 @@ class InputSanitizer
     {
         // Check if the input is a valid email address
         if (!filter_var($input, FILTER_VALIDATE_EMAIL)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static function checkDate(string $input): bool
+    {
+        // Check if the input is a valid date
+        if (!strtotime($input)) {
             return false;
         } else {
             return true;
