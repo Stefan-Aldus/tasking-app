@@ -24,16 +24,18 @@
                                         <td>{$task->getTaskName()}</td>
                                         <td>{$task->getTaskDate()}</td>
                                         <td>{$task->getTaskStatus()}</td>
-                                        <td><input class="btn btn-primary w-100" name="description" type="submit" value="See details"</td>
-                                </form>
-                                <td>
-                                    {if $task->getTaskStatus() == 'Not completed'}
-                                        <input type="submit" name="finish" value="Finish" class="btn btn-primary w-100">
-                                    {else}
-                                        <input type="submit" name="finish" value="Unfinish" class="btn btn-primary w-100">
-                                    {/if}
-                                </td>
-                                </tr>
+                                        <td><input class="btn btn-primary w-100" name="description" type="submit"
+                                                   value="See details"</td>
+                                        <td>
+                                            {if $task->getTaskStatus() == 'Not completed'}
+                                                <input type="submit" name="finish" value="Finish"
+                                                       class="btn btn-primary w-100">
+                                            {else}
+                                                <input type="submit" name="finish" value="Unfinish"
+                                                       class="btn btn-primary w-100">
+                                            {/if}
+                                        </td>
+                                    </tr>
                                 </form>
                             {/foreach}
                         {else}

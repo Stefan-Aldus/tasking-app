@@ -16,13 +16,13 @@
         </div>
         <div class="form-group">
             <label class="required-input" for="password1">Password</label>
-            <input type="text" id="password1" name="password1" class="form-control"/>
+            <input type="password" id="password1" name="password1" class="form-control"/>
             <label class="required-input" for="password2">Repeat Password</label>
-            <input type="text" id="password2" name="password2" class="form-control"/>
+            <input type="password" id="password2" name="password2" class="form-control"/>
             <p class="form-text text-muted">Passwords must match and be at least 6 characters long.</p>
         </div>
         <div class="form-group d-flex mt-3 w-100">
-            <input type="submit" value="Register" name="submit" class="btn btn-primary w-50 rounded-0"/>
+            <input type="submit" value="Register" name="registersubmit" class="btn btn-primary w-50 rounded-0"/>
             <input type="reset" value="Reset Form" class="btn btn-secondary w-50 rounded-0"/>
         </div>
     </form>

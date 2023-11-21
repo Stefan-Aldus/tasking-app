@@ -9,10 +9,10 @@
         </div>
         <div class="form-group">
             <label class="required-input" for="password">Password</label>
-            <input type="text" id="password" name="password" class="form-control"/>
+            <input type="password" id="password" name="password" class="form-control"/>
         </div>
         <div class="form-group d-flex mt-3 w-100">
-            <input type="submit" value="Login" name="submit" class="btn btn-primary w-50 rounded-0"/>
+            <input type="submit" value="Login" name="loginsubmit" class="btn btn-primary w-50 rounded-0"/>
             <input type="reset" value="Reset Form" class="btn btn-secondary w-50 rounded-0"/>
         </div>
     </form>

@@ -22,7 +22,7 @@ switch ($action) {
         // If the user is not logged in, display the login form
         if (!isset($_SESSION["user"])) {
             // If the form has not been submitted, display the login form
-            if (!isset($_POST["submit"])) {
+            if (!isset($_POST["loginsubmit"])) {
                 $smarty->display("login.tpl");
                 // If the form has been submitted, check if all fields are filled in
             } elseif (isset($_POST["username"]) && isset($_POST["password"])) {
@@ -43,27 +43,27 @@ switch ($action) {
         }
         break;
 
-    case "logout":
-        unset($_SESSION["user"]);
-        header("Location: index.php?action=login");
-        break;
-
     case "register":
         // If the user is not logged in, display the register form
         if (!isset($_SESSION["user"])) {
             // If the form has not been submitted, display the register form
-            if (!isset($_POST["submit"])) {
+            if (!isset($_POST["registersubmit"])) {
                 $smarty->display("register.tpl");
                 // If the form has been submitted, check if all fields are filled in
+            } elseif (isset($_SESSION["formsubmitted"]) && $_SESSION["formsubmitted"] === "register") {
+                unset($_SESSION["formsubmitted"]);
+                header("Location: index.php?action=login");
+                exit();
             } elseif (!empty($_POST["username"]) && !empty($_POST["password1"]) && !empty($_POST["password2"]) && !empty($_POST["firstname"]) && !empty($_POST["lastname"])) {
                 // If the length of the password is not 6 or more characters, display an error message
-                if (InputSanitizer::checkLength($_POST["password1"], 6,)) {
+                if (!InputSanitizer::checkLength($_POST["password1"], 6,)) {
                     $smarty->assign("error", "Password must be at least 6 characters long.");
                     $smarty->display("register.tpl");
                     // If the username is available, attempt to register the user
                 } elseif (User::checkUserAvailable($_POST["username"])) {
                     // If the registration is successful, display a success message
                     if (User::register($_POST["username"], $_POST["password1"], $_POST["password2"], $_POST["firstname"], $_POST["lastname"])) {
+                        $_SESSION["formsubmitted"] = "register";
                         $smarty->assign("info", "Your account has been made, you can now log in.");
                         $smarty->display("login.tpl");
                         // If the registration is unsuccessful, display an error message
@@ -84,6 +84,11 @@ switch ($action) {
         }
         break;
 
+    case "logout":
+        unset($_SESSION["user"]);
+        header("Location: index.php?action=login");
+        break;
+
     case "tasks":
         if (isset($_SESSION["user"])) {
             $smarty->assign("tasks", $_SESSION["user"]->getTasks());
@@ -99,6 +104,10 @@ switch ($action) {
         if (isset($_SESSION["user"])) {
             if (!isset($_POST["submit"])) {
                 $smarty->display("addtask.tpl");
+            } elseif (isset($_SESSION["formSubmitted"]) && $_SESSION["formSubmitted"] === "task") {
+                unset($_SESSION["formSubmitted"]);
+                header("Location: index.php?action=tasks");
+                exit();
             } else {
                 if (!empty($_POST["date"]) && !empty($_POST["name"])) {
                     if (!empty($_POST["description"])) {
@@ -106,7 +115,9 @@ switch ($action) {
                     } else {
                         Task::createTask($_POST["name"], "", $_POST["date"]);
                     }
+                    $_SESSION["formSubmitted"] = "task";
                     $smarty->assign("info", "Task added successfully!");
+                    $smarty->assign("tasks", $_SESSION["user"]->getTasks());
                     $smarty->display("tasks.tpl");
                 } else {
                     $smarty->assign("error", "Please fill in all fields.");
@@ -212,5 +223,5 @@ switch ($action) {
         break;
 
     default:
-        $smarty->display("404.tpl");
+        $smarty->display("home.tpl");
 }

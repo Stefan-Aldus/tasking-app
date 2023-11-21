@@ -124,11 +124,15 @@ class User
         return $available;
     }
 
-    public function getTasks(): array
+    public function getTasks(): array|null
     {
         unset($this->tasks);
         $this->getTasksFromDb();
-        return $this->tasks;
+        if (!empty($this->tasks)) {
+            return $this->tasks;
+        } else {
+            return null;
+        }
     }
 
     public function getFirstName(): string
