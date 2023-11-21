@@ -4,6 +4,7 @@ namespace TaskingApp;
 
 class User
 {
+    public string $query;
     private string $username;
     private string $firstName;
     private string $lastName;
@@ -158,14 +159,22 @@ class User
 
     public function updateUsername($newUsername): void
     {
-        $table = "user";
+        $conditions = [
+            "user" => [
+                "id" => $this->userId
+            ]
+        ];
+//        $params key = column name, $params key value = value to update and new value
         $params = [
-            "username" => $newUsername
+            "user" => [
+                "username" => $newUsername
+            ]
         ];
-        $where = [
-            "id" => $this->userId
-        ];
-        Db::$db->update($table, $params, $where);
+
+        // Update the database
+        Db::$db->update($conditions, $params);
+
+        // Update the object property
         $this->username = $newUsername;
     }
 

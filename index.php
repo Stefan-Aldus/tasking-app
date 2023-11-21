@@ -225,3 +225,4 @@ switch ($action) {
     default:
         $smarty->display("home.tpl");
 }
+echo "<pre>";

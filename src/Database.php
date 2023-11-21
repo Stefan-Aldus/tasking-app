@@ -8,7 +8,7 @@ interface Database
 
     public function insert(string $table, array $params);
     // UPDATE task SET completed = 1 WHERE task.id = :id
-    public function update(string $table, array $params);
+    public function update(array $conditions, array $params);
 
     public function delete();
 

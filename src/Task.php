@@ -111,15 +111,19 @@ class Task
 
     public function updateTaskStatus(): void
     {
-        if ($this->taskStatus == 1) {
-            $this->taskStatus = 0;
-        } else {
-            $this->taskStatus = 1;
-        }
+        // Toggle the task status between 0 and 1
+        $this->taskStatus = ($this->taskStatus == 1) ? 0 : 1;
+
+        // Define parameters for the update
         $params = [
+            "completed" => $this->taskStatus,
             "id" => $this->taskId,
-            "completed" => $this->taskStatus
         ];
-        Db::$db->update("task", $params);
+
+        // Call the update method in the Db class
+        Db::$db->update(
+            "task",          // Table name
+            $params         // Parameters for the update
+        );
     }
 }

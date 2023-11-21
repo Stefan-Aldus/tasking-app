@@ -36,21 +36,35 @@ class Mysql implements Database
 //        INSERT INTO user (name, password) VALUES (':username', ':password')";
     }
 
-    public function update(string $table, array $params)
+    public function update(array $conditions, array $params): void
     {
-// UPDATE task SET completed = 1 WHERE task.id = :id
         try {
-            $query = "UPDATE $table SET ";
-            $columns = [];
-            foreach ($params as $key => $value) {
-                $columns[] = "$key = '$value'";
+            $query = "UPDATE ";
+            if (is_array($params)) {
+                $query .= implode(", ", array_keys($params));
+                $query .= " SET ";
+                foreach ($params as $table => $columnArray) {
+                    foreach ($columnArray as $column => $value) {
+                        $query .= "$column = '$value',";
+                    }
+                }
+                $query = rtrim($query, ",");
             }
-            $query .= implode(", ", $columns);
-            $query .= " WHERE id = :id";
-            $update = $this->connection->prepare($query);
-            $update->bindValue(":id", $params["id"]);
-            $update->execute();
+            if (is_array($conditions)) {
+                $query .= " WHERE ";
+                $conditionsArray = [];
+                foreach ($conditions as $key => $value) {
+                    foreach ($value as $condition => $conditionvalue) {
+                        $conditionsArray[] = "$condition = '$conditionvalue'";
+                    }
+                }
+
+                $query .= implode(" AND ", $conditionsArray);
+            }
+            var_dump($query);
+            $this->connection->query($query);
         } catch (PDOException $error) {
+            // Handle any potential errors
             echo "Error: " . $error->getMessage() . "<br/>";
         }
     }

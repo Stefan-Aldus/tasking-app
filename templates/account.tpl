@@ -3,6 +3,11 @@
 {block name="content"}
     <h1>{$user->getUsername()}</h1>
     <div>
+        {if !empty($User->$query)}
+            <div class="alert alert-success" role="alert">
+                {$User->$query}
+            </div>
+        {/if}
         <form method="post" action="/index.php?action=editaccount">
             <h2>Your user data:</h2>
             <div class="d-flex justify-content-between w-25">
